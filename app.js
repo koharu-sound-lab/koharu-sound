@@ -5,18 +5,21 @@
  *   id, title, genre, tags, mp3, wav, youtube
  * 日本語列名にも対応: 管理番号, 曲名, ジャンル, タグ, MP3, WAV, Youtube
  *
- * サムネイル: assets/thumbnails/{管理番号}.png を自動参照
+ * サムネイル: assets/thumbnails/{管理番号}.png を自動参照（例: bgm-001.png）
  */
 
 // サムネイル画像の配置先（ファイル名 = 管理番号.png）
 const THUMBNAIL_DIR = "assets/thumbnails";
+
+// 管理番号が未入力の行に付与する ID プレフィックス
+const ID_PREFIX = "bgm";
 
 // 後ほど差し替えるためのダミーURL
 const CSV_URL =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vTBqDvrRG67VKArIirsVZ99hznQ8GyFMqm0om3nsh2zxTKLr4Cp2YttOPPiPd9qBxRckusgFk1hdxpV/pub?gid=0&single=true&output=csv";
 
 const COLUMN_MAP = {
-  id: ["id", "管理番号", "song_id", "songid"],
+  id: ["id", "管理番号", "bgm_id", "bgmid", "song_id", "songid"],
   title: ["title", "曲名", "name", "song_name"],
   genre: ["genre", "ジャンル"],
   tags: ["tags", "tag", "タグ"],
@@ -138,7 +141,7 @@ function mapRowsToSongs(rows) {
     if (!id && !title) return songs;
 
     songs.push({
-      id: id || `song-${String(songs.length + 1).padStart(3, "0")}`,
+      id: id || `${ID_PREFIX}-${String(songs.length + 1).padStart(3, "0")}`,
       title: title || "Untitled",
       genre: parseListField(get("genre")),
       tags: parseListField(get("tags")),
